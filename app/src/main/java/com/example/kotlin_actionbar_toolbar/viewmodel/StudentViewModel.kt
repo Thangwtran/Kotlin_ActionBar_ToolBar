@@ -13,4 +13,7 @@ class StudentViewModel : ViewModel() {
         val student = Student("John Doe", 20)
         _students.value = student
     }
+    fun updateStudent(student: Student) {
+        _students.value = student
+    }
 }
