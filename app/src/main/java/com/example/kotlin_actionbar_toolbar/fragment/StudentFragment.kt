@@ -20,7 +20,7 @@ class StudentFragment() : Fragment() {
     private lateinit var binding: FragmentStudentBinding
     private var listener: OnStudentEditListener? = null
 
-    companion object{
+    companion object {
         fun getInstance(listener: OnStudentEditListener): StudentFragment {
             val fragment = StudentFragment()
             fragment.listener = listener
@@ -51,11 +51,32 @@ class StudentFragment() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initMenu()
+        // initMenu()
+        binding.toolbarStudent.inflateMenu(R.menu.student_menu)
+        binding.toolbarStudent.title = "Student"
+        binding.toolbarStudent.setOnMenuItemClickListener { item->
+            when (item.itemId) {
+                R.id.action_edit -> {
+                    listener?.onStudentEdit()
+                    true
+                }
+                R.id.action_search -> {
+                    // TODO: Handle search action
+                    true
+                }
+                R.id.action_setting -> {
+                    // TODO: Handle setting action
+                    true
+                }
+                else -> {
+                    false
+                }
+            }
+        }
         val viewmodel = ViewModelProvider(requireActivity())[StudentViewModel::class.java]
-        viewmodel.students.observe(viewLifecycleOwner){
-            binding.textFullName.text = getString(R.string.text_full_name,it.fullName)
-            binding.textAge.text = getString(R.string.text_age,it.age)
+        viewmodel.students.observe(viewLifecycleOwner) {
+            binding.textFullName.text = getString(R.string.text_full_name, it.fullName)
+            binding.textAge.text = getString(R.string.text_age, it.age)
         }
     }
 
@@ -73,14 +94,17 @@ class StudentFragment() : Fragment() {
                         listener?.onStudentEdit()
                         true
                     }
+
                     R.id.action_search -> {
                         // TODO: Handle search action
                         true
                     }
+
                     R.id.action_setting -> {
                         // TODO: Handle setting action
                         true
                     }
+
                     else -> false
                 }
             }

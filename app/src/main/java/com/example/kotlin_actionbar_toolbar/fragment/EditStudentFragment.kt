@@ -45,7 +45,30 @@ class EditStudentFragment : Fragment(), View.OnFocusChangeListener {
         }
         fullName.onFocusChangeListener = this
         age.onFocusChangeListener = this
-         initMenu()
+        binding.toolbarEdit.inflateMenu(R.menu.student_detail_menu)
+        updateToolbar()
+        binding.toolbarEdit.title = "Edit Student"
+        binding.toolbarEdit.setNavigationIcon(R.drawable.ic_arrow_back_24)
+        binding.toolbarEdit.setNavigationOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+        binding.toolbarEdit.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.action_done -> {
+                    val student = Student(fullName.text.toString(), age.text.toString().toInt())
+                    viewModel.updateStudent(student)
+                    requireActivity().supportFragmentManager.popBackStack()
+                    true
+                }
+                else -> false
+            }
+        }
+        // initMenu()
+    }
+
+    private fun updateToolbar() {
+        val itemMenuDone = binding.toolbarEdit.menu.findItem(R.id.action_done)
+        itemMenuDone.isVisible = isEditing
     }
 
     private fun initMenu() {
@@ -78,7 +101,8 @@ class EditStudentFragment : Fragment(), View.OnFocusChangeListener {
     override fun onFocusChange(view: View?, hasFocus: Boolean) {
         if(hasFocus){
             isEditing = true
-            requireActivity().invalidateMenu()
+            updateToolbar()
+            // requireActivity().invalidateMenu()
         }
     }
 }
